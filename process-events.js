@@ -1,0 +1,46 @@
+'use strict';
+
+let path = require('path');
+let resolvePath = path.resolve;
+let basename = path.basename;
+let _ = require('lodash');
+let globSync = require('glob').sync;
+let moment = require('moment');
+
+module.exports = function() {
+    let handlers = globSync('handlers/*.js').map(function(handlerPath) {
+        return require(resolvePath(handlerPath));
+    });
+
+    let events = globSync('*.json').map(function(eventPath) {
+        let event = require(resolvePath(eventPath));
+
+        event.timestamp = moment(
+            basename(eventPath, '.json'),
+            "YYYY-MM-DD HH-mm-ss"
+        ).unix();
+
+        return event;
+    }).sort(function(a, b) {
+        if(a.timestamp < b.timestamp) {
+            return -1;
+        }
+        else
+        if(a.timestamp > b.timestamp) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    });
+
+    let context = {};
+
+    events.forEach(function(event) {
+        _.each(handlers, function(handler) {
+            handler.call(context, event);
+        });
+    });
+
+    console.log(JSON.stringify(context, null, 4));
+};

@@ -9,5 +9,13 @@
   },
   "bugs": {
     "url": "https://github.com/n2liquid/ev/issues"
+  },
+  "bin": {
+    "ev": "./main.js"
+  },
+  "dependencies": {
+    "glob": "^5.0.14",
+    "lodash": "^3.10.1",
+    "moment": "^2.10.6"
   }
 }
