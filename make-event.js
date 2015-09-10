@@ -3,6 +3,20 @@
 let fs = require('fs');
 let moment = require('moment');
 
+function maybeParse(value) {
+    try {
+        return JSON.parse(value);
+    }
+    catch(error) {
+        if(value.indexOf(',') !== -1) {
+            return value.split(',').map(maybeParse);
+        }
+        else {
+            return value;
+        }
+    }
+}
+
 module.exports = function(args) {
     let dateTime = moment().format('YYYY-MM-DD HH-mm-ss');
     let event = {};
@@ -10,14 +24,15 @@ module.exports = function(args) {
     event.type = args[0];
 
     args.slice(1).forEach(function(arg) {
-        var parsed = /^([^:]+):(.+)$/.exec(arg);
+        var keyValue = /^([^:]+):(.+)$/.exec(arg);
 
-        if(!parsed) {
-            console.error("Cannot parse argument " + (i + 1) + ": '" + arg + '".');
-            process.exit(-1);
+        if(keyValue) {
+            event[keyValue[1]] = maybeParse(keyValue[2]);
         }
-
-        event[parsed[1]] = parsed[2];
+        else {
+            event.positionals = event.positionals || [];
+            event.positionals.push(maybeParse(arg));
+        }
     });
 
     fs.writeFileSync(dateTime + '.json', JSON.stringify(event, null, 4));
