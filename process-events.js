@@ -1,5 +1,6 @@
 'use strict';
 
+let fs = require('fs');
 let path = require('path');
 let resolvePath = path.resolve;
 let basename = path.basename;
@@ -12,7 +13,18 @@ module.exports = function() {
         return require(resolvePath(handlerPath));
     });
 
-    let events = globSync('*.json').map(function(eventPath) {
+    let context = (function() {
+        let contextFilePath = process.cwd() + '/genesis.json';
+
+        if(fs.existsSync(contextFilePath)) {
+            return require(contextFilePath);
+        }
+        else {
+            return {};
+        }
+    })();
+
+    let events = globSync('!(genesis).json').map(function(eventPath) {
         let event = require(resolvePath(eventPath));
 
         event.timestamp = moment(
@@ -33,8 +45,6 @@ module.exports = function() {
             return 0;
         }
     });
-
-    let context = {};
 
     events.forEach(function(event) {
         _.each(handlers, function(handler) {
