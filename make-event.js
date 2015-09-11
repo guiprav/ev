@@ -23,12 +23,25 @@ function maybeParse(value) {
 }
 
 module.exports = function(args) {
-    let dateTime = moment().format('YYYY-MM-DD HH-mm-ss');
     let event = {};
 
-    event.type = args[0];
+    event.type = args.shift();
 
-    args.slice(1).forEach(function(arg) {
+    let dateTime = (function() {
+        let dateTime = parseDate(args[0]);
+
+        if(dateTime) {
+            dateTime = moment(dateTime);
+            args.shift();
+        }
+        else {
+            dateTime = moment();
+        }
+
+        return dateTime;
+    })();
+
+    args.forEach(function(arg) {
         var keyValue = /^([^:]+):(.+)$/.exec(arg);
 
         if(keyValue) {
@@ -40,5 +53,8 @@ module.exports = function(args) {
         }
     });
 
-    fs.writeFileSync(dateTime + '.json', JSON.stringify(event, null, 4));
+    fs.writeFileSync(
+        dateTime.format('YYYY-MM-DD HH-mm-ss') + '.json',
+        JSON.stringify(event, null, 4)
+    );
 };
