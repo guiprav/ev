@@ -2,8 +2,13 @@
 
 let fs = require('fs');
 let moment = require('moment');
+let parseDate = require('./parse-date');
 
 function maybeParse(value) {
+    if(value[0] === '@') {
+        return moment(parseDate(value.slice(1))).format('YYYY-MM-DD HH-mm-ss');
+    }
+
     try {
         return JSON.parse(value);
     }

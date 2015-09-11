@@ -14,6 +14,7 @@
     "ev": "./main.js"
   },
   "dependencies": {
+    "chrono-node": "^1.0.6",
     "glob": "^5.0.14",
     "lodash": "^3.10.1",
     "moment": "^2.10.6"
