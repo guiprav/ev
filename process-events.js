@@ -25,14 +25,9 @@ module.exports = function() {
     })();
 
     let events = globSync('!(genesis).json').map(function(eventPath) {
-        let event = require(resolvePath(eventPath));
 
-        event.timestamp = moment(
-            basename(eventPath, '.json'),
-            "YYYY-MM-DD HH-mm-ss"
-        ).unix();
 
-        return event;
+        return require(resolvePath(eventPath));
     });
 
     events.forEach(function(event) {
