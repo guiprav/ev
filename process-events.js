@@ -7,6 +7,11 @@ let basename = path.basename;
 let _ = require('lodash');
 let globSync = require('glob').sync;
 let moment = require('moment');
+let mkdirpSync = require('mkdirp').sync;
+
+function jsonStringify(value) {
+    return JSON.stringify(value, null, 4);
+}
 
 module.exports = function() {
     let handlers = globSync('handlers/*.js').map(function(handlerPath) {
@@ -24,9 +29,12 @@ module.exports = function() {
         }
     })();
 
+    let currentSnapshotsDirectory = moment().format('YYYY-MM-DD HH-mm-ss');
+    let currentSnapshotsPath = 'snapshots/' + currentSnapshotsDirectory;
+
+    mkdirpSync(currentSnapshotsPath);
+
     let events = globSync('!(genesis).json').map(function(eventPath) {
-
-
         return require(resolvePath(eventPath));
     });
 
@@ -34,7 +42,20 @@ module.exports = function() {
         _.each(handlers, function(handler) {
             handler.call(context, event);
         });
+
+        let currentSnapshotPath = (
+            currentSnapshotsPath + '/' +
+            event.moment.format('YYYY-MM-DD HH-mm-ss') + '.json'
+        );
+
+        fs.writeFileSync(currentSnapshotPath, jsonStringify(context));
     });
 
-    console.log(JSON.stringify(context, null, 4));
+    let latestSnapshotsPath = 'snapshots/latest';
+
+    if(fs.existsSync(latestSnapshotsPath)) {
+        fs.unlinkSync(latestSnapshotsPath);
+    }
+
+    fs.symlinkSync(currentSnapshotsDirectory, latestSnapshotsPath);
 };
