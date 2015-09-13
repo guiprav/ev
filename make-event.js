@@ -1,8 +1,15 @@
 'use strict';
 
 let fs = require('fs');
+let path = require('path');
+let resolvePath = path.resolve;
+let globSync = require('glob').sync;
 let moment = require('moment');
 let parseDate = require('./parse-date');
+
+let handlers = globSync('handlers/*.make.js').map(function(handlerPath) {
+    require(resolvePath(handlerPath));
+});
 
 function maybeParse(value) {
     if(value[0] === '@') {
@@ -51,6 +58,10 @@ module.exports = function(args) {
             event.positionals = event.positionals || [];
             event.positionals.push(maybeParse(arg));
         }
+    });
+
+    handlers.forEach(function(handler) {
+        handler.call(event);
     });
 
     fs.writeFileSync(
