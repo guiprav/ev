@@ -61,7 +61,17 @@ module.exports = function(args) {
     });
 
     handlers.forEach(function(handler) {
-        handler.call(event);
+        try {
+            handler.call(event);
+        }
+        catch(error) {
+            if(!error.assertionError) {
+                throw error;
+            }
+
+            console.error(error.message);
+            process.exit(-1);
+        }
     });
 
     fs.writeFileSync(
