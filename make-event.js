@@ -18,7 +18,7 @@ module.exports = function(args) {
     let event = {};
 
     let dateTime = (function() {
-        let dateTime = parseDate(args[0]);
+        let dateTime = parseDate(args[0].slice(1));
 
         if(dateTime) {
             dateTime = moment(dateTime);
