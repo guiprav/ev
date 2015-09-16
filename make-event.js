@@ -5,6 +5,7 @@ let path = require('path');
 let resolvePath = path.resolve;
 let globSync = require('glob').sync;
 let moment = require('moment');
+let pad = require('pad');
 let parseDate = require('./parse-date');
 let parseParameter = require('./parse-parameter');
 
@@ -57,8 +58,25 @@ module.exports = function(args) {
         }
     });
 
-    fs.writeFileSync(
-        dateTime.format('YYYY-MM-DD HH-mm-ss') + '.json',
-        JSON.stringify(event, null, 4)
-    );
+    {
+        let fileName;
+        let maxCount = 999;
+
+        for(let i = 0; i < maxCount; ++i) {
+            fileName = (
+                dateTime.format('YYYY-MM-DD HH-mm-ss') +
+                '.' + pad(3, i, '0') + '.json'
+            );
+
+            if(!fs.existsSync(fileName)) {
+                break;
+            }
+            else
+            if(i === maxCount - 1) {
+                throw new Error("Too many events for a second.");
+            }
+        }
+
+        fs.writeFileSync(fileName, JSON.stringify(event, null, 4));
+    }
 };

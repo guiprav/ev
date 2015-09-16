@@ -37,7 +37,7 @@ module.exports = function() {
     let events = globSync('!(genesis).json').map(function(eventPath) {
         let event = require(resolvePath(eventPath));
 
-        event.dateTime = basename(eventPath, '.json');
+        event.dateTime = basename(eventPath, '.json').split('.')[0];
 
         return event;
     });
