@@ -3,7 +3,7 @@
 let moment = require('moment');
 let dateTimeFormat = require('./date-time-format');
 
-module.exports = function(value) {
+module.exports = exports = function(value) {
     if(value[0] === '@') {
         return moment(parseDate(value.slice(1))).format(dateTimeFormat);
     }
@@ -13,7 +13,7 @@ module.exports = function(value) {
     }
     catch(error) {
         if(value.indexOf(',') !== -1) {
-            return value.split(',').map(maybeParse);
+            return value.split(',').map(exports);
         }
         else {
             return value;
