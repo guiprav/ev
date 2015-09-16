@@ -8,7 +8,7 @@ let moment = require('moment');
 let parseDate = require('./parse-date');
 
 let handlers = globSync('handlers/*.make.js').map(function(handlerPath) {
-    require(resolvePath(handlerPath));
+    return require(resolvePath(handlerPath));
 });
 
 function maybeParse(value) {
