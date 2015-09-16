@@ -65,7 +65,7 @@ module.exports = function(args) {
         for(let i = 0; i < maxCount; ++i) {
             fileName = (
                 dateTime.format('YYYY-MM-DD HH-mm-ss') +
-                '.' + pad(3, i, '0') + '.json'
+                '.' + pad(3, i, '0') + '.ev.json'
             );
 
             if(!fs.existsSync(fileName)) {
