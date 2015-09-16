@@ -34,7 +34,7 @@ module.exports = function() {
 
     mkdirpSync(currentSnapshotsPath);
 
-    let events = globSync('!(genesis).json').map(function(eventPath) {
+    let events = globSync('!(package|genesis).json').map(function(eventPath) {
         let event = require(resolvePath(eventPath));
 
         event.dateTime = basename(eventPath, '.json').split('.')[0];
