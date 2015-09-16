@@ -35,7 +35,11 @@ module.exports = function() {
     mkdirpSync(currentSnapshotsPath);
 
     let events = globSync('!(genesis).json').map(function(eventPath) {
-        return require(resolvePath(eventPath));
+        let event = require(resolvePath(eventPath));
+
+        event.dateTime = basename(eventPath, '.json');
+
+        return event;
     });
 
     events.forEach(function(event) {
@@ -44,9 +48,10 @@ module.exports = function() {
         });
 
         let currentSnapshotPath = (
-            currentSnapshotsPath + '/' +
-            event.moment.format('YYYY-MM-DD HH-mm-ss') + '.json'
+            currentSnapshotsPath + '/' + event.dateTime + '.json'
         );
+
+        delete event.dateTime;
 
         fs.writeFileSync(currentSnapshotPath, jsonStringify(context));
     });
