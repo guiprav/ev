@@ -17,8 +17,6 @@ let handlers = globSync('cli-parsers/*.js').map(function(handlerPath) {
 module.exports = function(args) {
     let event = {};
 
-    event.type = args.shift();
-
     let dateTime = (function() {
         let dateTime = parseDate(args[0]);
 
@@ -32,6 +30,8 @@ module.exports = function(args) {
 
         return dateTime;
     })();
+
+    event.type = args.shift();
 
     args.forEach(function(arg) {
         var keyValue = /^([^:]+):(.+)$/.exec(arg);
