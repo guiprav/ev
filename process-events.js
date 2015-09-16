@@ -43,6 +43,8 @@ module.exports = function() {
     });
 
     events.forEach(function(event) {
+        console.log(jsonStringify(event));
+
         _.each(handlers, function(handler) {
             handler.call(context, event);
         });
@@ -63,4 +65,8 @@ module.exports = function() {
     }
 
     fs.symlinkSync(currentSnapshotsDirectory, latestSnapshotsPath);
+
+    console.log("---");
+
+    console.log(jsonStringify(context));
 };
