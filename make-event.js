@@ -6,6 +6,7 @@ let resolvePath = path.resolve;
 let globSync = require('glob').sync;
 let moment = require('moment');
 let pad = require('pad');
+let dateTimeFormat = require('./date-time-format');
 let parseDate = require('./parse-date');
 let parseParameter = require('./parse-parameter');
 
@@ -64,7 +65,7 @@ module.exports = function(args) {
 
         for(let i = 0; i < maxCount; ++i) {
             fileName = (
-                dateTime.format('YYYY-MM-DD HH-mm-ss') +
+                dateTime.format(dateTimeFormat) +
                 '.' + pad(3, i, '0') + '.ev.json'
             );
 

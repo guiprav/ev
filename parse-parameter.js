@@ -1,10 +1,11 @@
 'use strict';
 
 let moment = require('moment');
+let dateTimeFormat = require('./date-time-format');
 
 module.exports = function(value) {
     if(value[0] === '@') {
-        return moment(parseDate(value.slice(1))).format('YYYY-MM-DD HH-mm-ss');
+        return moment(parseDate(value.slice(1))).format(dateTimeFormat);
     }
 
     try {

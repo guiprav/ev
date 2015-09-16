@@ -8,6 +8,7 @@ let _ = require('lodash');
 let globSync = require('glob').sync;
 let moment = require('moment');
 let mkdirpSync = require('mkdirp').sync;
+let dateTimeFormat = require('./date-time-format');
 
 function jsonStringify(value) {
     return JSON.stringify(value, null, 4);
@@ -29,7 +30,7 @@ module.exports = function() {
         }
     })();
 
-    let currentSnapshotsDirectory = moment().format('YYYY-MM-DD HH-mm-ss');
+    let currentSnapshotsDirectory = moment().format(dateTimeFormat);
     let currentSnapshotsPath = 'snapshots/' + currentSnapshotsDirectory;
 
     mkdirpSync(currentSnapshotsPath);
