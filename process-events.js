@@ -14,7 +14,7 @@ function jsonStringify(value) {
 }
 
 module.exports = function() {
-    let handlers = globSync('handlers/*.process.js').map(function(handlerPath) {
+    let handlers = globSync('event-interpreters/*.js').map(function(handlerPath) {
         return require(resolvePath(handlerPath));
     });
 

@@ -8,7 +8,7 @@ let moment = require('moment');
 let parseDate = require('./parse-date');
 let parseParameter = require('./parse-parameter');
 
-let handlers = globSync('handlers/*.make.js').map(function(handlerPath) {
+let handlers = globSync('cli-parsers/*.js').map(function(handlerPath) {
     return require(resolvePath(handlerPath));
 });
 
