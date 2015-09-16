@@ -33,6 +33,11 @@ module.exports = function(args) {
 
     event.type = args.shift();
 
+    if(!event.type) {
+        console.error("Too few arguments.");
+        process.exit(-1);
+    }
+
     args.forEach(function(arg) {
         var keyValue = /^([^:]+):(.+)$/.exec(arg);
 
